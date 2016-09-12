@@ -10,4 +10,4 @@ antigen theme sepehr/sepshell sepshell
 ```
 
 ## Screenshot
-![Screenshot](http://i.imgur.com/egIaRWz.png)
+![Screenshot](http://i.imgur.com/9FrW2iL.png)
