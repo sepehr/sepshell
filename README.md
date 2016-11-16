@@ -5,7 +5,7 @@ Sepshell is zsh theme forked from Taylor Otwell's old taybalt theme. It's inspir
 Be sure to install [Powerline fonts](https://github.com/powerline/fonts) and select a Powerline font in the iTerm2 settings.
 
 ## Installation
-s
+```shell
 # With vanilla zsh:
 git clone https://github.com/sepehr/sepshell.git ~/.zsh-sepshell
 echo 'source  ~/zsh-sepshell/sepshell.zsh-theme' >> ~/.zshrc
