@@ -7,22 +7,20 @@ Sepshell is zsh theme forked from Taylor Otwell's old taybalt theme. It's inspir
 
 ## Installation
 ```shell
+# NOTICE: Sepshell needs "robbyrussell/oh-my-zsh" in place.
+
 # With vanilla zsh:
 git clone https://github.com/sepehr/sepshell.git ~/.zsh-sepshell
 echo 'source  ~/zsh-sepshell/sepshell.zsh-theme' >> ~/.zshrc
 
 # With zplug:
-zplug "robbyrussell/oh-my-zsh", use:"lib/*.zsh"
 zplug "sepehr/sepshell", use:sepshell.zsh-theme
-zplug load
 
 # With zgen:
 zgen load sepehr/sepshell sepshell
-zgen save 
 
 # With antigen:
 antigen theme sepehr/sepshell sepshell
-antigen apply
 
 # With antibody:
 antibody bundle sepehr/sepshell
