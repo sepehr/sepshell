@@ -1,19 +1,23 @@
 # vim:ft=zsh ts=2 sw=2 sts=2
 #
-# In order for this theme to render correctly, you will need a
-# [Powerline-patched font](https://gist.github.com/1595572).
+# In order for this theme to render correctly, you need a Powerline-patched font:
+# https://gist.github.com/1595572
+
+### Prompt icons
+# http://www.alanwood.net/unicode#symbols
+PROMPT_NORMAL='ϟ' # ϟ ⟆ ⨠ ⁑ ⁝ 🍕 🍺
+PROMPT_ERROR='✕'  # ✕ ⨵
+PROMPT_JOB='⤶'    # ⤶ ⟲
+PROMPT_ROOT='✱'   # ✱ ✸ ♛ ⟢ ✧ ϟ
+PROMPT_ARROW='⤳'  # ⤳ ➦ ↪ ↳ ⇥
+PROMPT_BRANCH=''
+ZSH_THEME_GIT_PROMPT_DIRTY='±'
 
 ### Segment drawing
 # A few utility functions to make it easy and re-usable to draw segmented prompts
 
 CURRENT_BG='NONE'
 SEGMENT_SEPARATOR=''
-
-## huh dont need this
-collapse_pwd() {
-   # echo $(pwd | sed -e "s,^$HOME,~,")
-   echo $(pwd | sed -e "s,^$HOME,~," | sed "s@\(.\)[^/]*/@\1/@g")
-}
 
 # Begin a segment
 # Takes two arguments, background and foreground. Both can be omitted,
@@ -47,52 +51,52 @@ prompt_end() {
 ### Prompt components
 # Each component will draw itself, and hide itself if no information needs to be shown
 
-# Context: user@hostname (who am I and where am I)
 prompt_context() {
   local user=`whoami`
 
   if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)ϟ"
+    prompt_segment black default "%(!.%{%F{yellow}%}.)$PROMPT_NORMAL"
   fi
 }
 
-# Git: branch/detached head, dirty status
 prompt_git() {
   local ref dirty
+
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    ZSH_THEME_GIT_PROMPT_DIRTY='±'
+    ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="$PROMPT_ARROW $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
     dirty=$(parse_git_dirty)
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
+
     if [[ -n $dirty ]]; then
       prompt_segment black yellow
     else
       prompt_segment black green
     fi
-    echo -n "${ref/refs\/heads\// }$dirty"
+
+    echo -n "${ref/refs\/heads\//$PROMPT_BRANCH }$dirty"
   fi
 }
 
-# Dir: current working directory
 prompt_dir() {
   prompt_segment black blue '%~'
   # echo $(pwd | sed -e "s,^$HOME,~," | sed "s@\(.\)[^/]*/@\1/@g")
 }
 
-# Status:
-# - was there an error
-# - am I root
-# - are there background jobs?
 prompt_status() {
   local symbols
   symbols=()
-  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}✘"
-  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}⚡"
-  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}⚙"
+
+  # Was there an error?
+  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$PROMPT_ERROR"
+
+  # Am I root? ooh, yea, baby.
+  [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}$PROMPT_ROOT"
+
+  # Are there background jobs?
+  [[ $(jobs -l | wc -l) -gt 0 ]] && symbols+="%{%F{cyan}%}$PROMPT_JOB"
 
   [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
 }
 
-## Main prompt
 build_prompt() {
   RETVAL=$?
   prompt_status
