@@ -14,7 +14,7 @@ git clone https://github.com/sepehr/sepshell.git ~/.zsh-sepshell
 echo 'source  ~/zsh-sepshell/sepshell.zsh-theme' >> ~/.zshrc
 
 # With zplug:
-zplug "sepehr/sepshell", use:sepshell.zsh-theme
+zplug "sepehr/sepshell", use:"sepshell.zsh-theme", on:"robbyrussell/oh-my-zsh"
 
 # With zgen:
 zgen load sepehr/sepshell sepshell
