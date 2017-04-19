@@ -1,5 +1,5 @@
 # Sepshell
-Sepshell is zsh theme inspired by the good old "cobalt2" them with git bisecting, merging and rebasing modes.
+Sepshell is zsh theme inspired by the good old "cobalt2" theme with git bisecting, merging and rebasing modes.
 
 ## Requirements
 - [Oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) framework.
