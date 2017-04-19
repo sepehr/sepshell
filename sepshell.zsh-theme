@@ -11,6 +11,9 @@ PROMPT_JOB='⤶'    # ⤶ ⟲
 PROMPT_ROOT='✱'   # ✱ ✸ ♛ ⟢ ✧ ϟ
 PROMPT_ARROW='⤳'  # ⤳ ➦ ↪ ↳ ⇥
 PROMPT_BRANCH=''
+PROMPT_MERGE='>M<'
+PROMPT_REBASE='>R>'
+PROMPT_BISECT='<B>'
 ZSH_THEME_GIT_PROMPT_DIRTY='±'
 
 ### Segment drawing
@@ -60,7 +63,9 @@ prompt_context() {
 }
 
 prompt_git() {
-  local ref dirty
+  local ref dirty mode repo_path
+
+  repo_path=$(git rev-parse --git-dir 2>/dev/null)
 
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="$PROMPT_ARROW $(git show-ref --head -s --abbrev |head -n1 2> /dev/null)"
@@ -72,7 +77,15 @@ prompt_git() {
       prompt_segment black green
     fi
 
-    echo -n "${ref/refs\/heads\//$PROMPT_BRANCH }$dirty"
+    if [[ -e "${repo_path}/BISECT_LOG" ]]; then
+        mode="$PROMPT_BISECT"
+    elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
+        mode="$PROMPT_MERGE"
+    elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
+        mode="$PROMPT_REBASE"
+    fi
+
+    echo -n "${ref/refs\/heads\//$PROMPT_BRANCH }${dirty}${mode}"
   fi
 }
 
