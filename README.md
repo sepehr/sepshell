@@ -1,5 +1,5 @@
 # Sepshell
-Sepshell is zsh theme forked from Taylor Otwell's old taybalt theme. It's inspired by "cobalt2".
+Sepshell is zsh theme inspired by the good old "cobalt2" them with git bisecting, merging and rebasing modes.
 
 ## Requirements
 - [Oh-my-zsh](https://github.com/robbyrussell/oh-my-zsh) framework.
@@ -31,4 +31,4 @@ source ~/.local/share/zpm/plugins/sepehr/sepshell.zsh-theme
 ```
 
 ## Screenshot
-![Screenshot](http://i.imgur.com/9FrW2iL.png)
+![Screenshot](http://i.imgur.com/U6E8exG.png)
