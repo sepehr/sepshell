@@ -31,4 +31,4 @@ source ~/.local/share/zpm/plugins/sepehr/sepshell.zsh-theme
 ```
 
 ## Screenshot
-![Screenshot](http://i.imgur.com/U6E8exG.png)
+![Screenshot](http://i.imgur.com/t1WowE8.png)
