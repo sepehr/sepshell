@@ -3,18 +3,21 @@
 # In order for this theme to render correctly, you need a Powerline-patched font:
 # https://gist.github.com/1595572
 
-### Prompt icons
+### Prompts
 # http://www.alanwood.net/unicode#symbols
-PROMPT_NORMAL='ϟ' # ϟ ⟆ ⨠ ⁑ ⁝ 🍕 🍺
-PROMPT_ERROR='✕'  # ✕ ⨵
-PROMPT_JOB='⤶'    # ⤶ ⟲
-PROMPT_ROOT='✱'   # ✱ ✸ ♛ ⟢ ✧ ϟ
-PROMPT_ARROW='⤳'  # ⤳ ➦ ↪ ↳ ⇥
-PROMPT_BRANCH=''
-PROMPT_MERGE='>M<'
-PROMPT_REBASE='>R>'
-PROMPT_BISECT='<B>'
+# http://www.fileformat.info/info/unicode/char/search.htm
+# http://www.personal.psu.edu/ejp10/blogs/gotunicode/charts/runes.html
+PROMPT_NORMAL='●' # ϟ ⟆ ⨠ ⁑ ⁝ ● 🍕 🍺
+PROMPT_ERROR='●' # ✕ ⨵ ●
+PROMPT_ROOT='●' # ✱ ✸ ♛ ⟢ ✧ ϟ
+PROMPT_JOB='←' # ← ⇤ ⤶ ⟲ «
+PROMPT_ARROW='→' # → ⇥ ⤳ ➦ ↪ ↳ »
+PROMPT_BRANCH='ᚶ' #  ᚠ ᚳ ᚶ ᚴ
+PROMPT_MERGE='»ᛖ«' # ⨇ ᛖ
+PROMPT_REBASE='»ᚱ«' # ᚱ
+PROMPT_BISECT='«ᛒ«' # ᛒ ᛔ
 ZSH_THEME_GIT_PROMPT_DIRTY='±'
+PROMPT_ERROR_OVERWRITE=true # If false, PROMPT_ERROR will be prepended to PROMPT_NORMAL. Overwrites it otherwise.
 
 ### Segment drawing
 # A few utility functions to make it easy and re-usable to draw segmented prompts
@@ -23,12 +26,13 @@ CURRENT_BG='NONE'
 SEGMENT_SEPARATOR=''
 
 # Begin a segment
-# Takes two arguments, background and foreground. Both can be omitted,
-# rendering default background/foreground.
+# Takes two arguments, background and foreground. Both can be omitted, rendering default background/foreground.
 prompt_segment() {
   local bg fg
+
   [[ -n $1 ]] && bg="%K{$1}" || bg="%k"
   [[ -n $2 ]] && fg="%F{$2}" || fg="%f"
+
   if [[ $CURRENT_BG != 'NONE' && $1 != $CURRENT_BG ]]; then
     echo -n " %{$bg%F{$CURRENT_BG}%}$SEGMENT_SEPARATOR%{$fg%} "
   else
@@ -36,7 +40,9 @@ prompt_segment() {
     # echo $(pwd | sed -e "s,^$HOME,~," | sed "s@\(.\)[^/]*/@\1/@g")
     # echo $(pwd | sed -e "s,^$HOME,~,")
   fi
+
   CURRENT_BG='NONE'
+
   [[ -n $3 ]] && echo -n $3
 }
 
@@ -53,14 +59,6 @@ prompt_end() {
 
 ### Prompt components
 # Each component will draw itself, and hide itself if no information needs to be shown
-
-prompt_context() {
-  local user=`whoami`
-
-  if [[ "$user" != "$DEFAULT_USER" || -n "$SSH_CLIENT" ]]; then
-    prompt_segment black default "%(!.%{%F{yellow}%}.)$PROMPT_NORMAL"
-  fi
-}
 
 prompt_git() {
   local ref dirty mode repo_path
@@ -95,11 +93,15 @@ prompt_dir() {
 }
 
 prompt_status() {
-  local symbols
-  symbols=()
+  local symbols=()
 
   # Was there an error?
-  [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$PROMPT_ERROR"
+  if $PROMPT_ERROR_OVERWRITE; then
+    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$PROMPT_ERROR" || symbols+="%{%F{green}%}$PROMPT_NORMAL"
+  else
+    symbols+="%(!.%{%F{yellow}%}.)$PROMPT_NORMAL"
+    [[ $RETVAL -ne 0 ]] && symbols+="%{%F{red}%}$PROMPT_ERROR"
+  fi
 
   # Am I root? ooh, yea, baby.
   [[ $UID -eq 0 ]] && symbols+="%{%F{yellow}%}$PROMPT_ROOT"
@@ -113,7 +115,6 @@ prompt_status() {
 build_prompt() {
   RETVAL=$?
   prompt_status
-  prompt_context
   prompt_dir
   prompt_git
   prompt_end
