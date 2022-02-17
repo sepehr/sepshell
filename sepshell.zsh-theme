@@ -112,8 +112,13 @@ prompt_status() {
   [[ -n "$symbols" ]] && prompt_segment black default "$symbols"
 }
 
+prompt_date() {
+    prompt_segment black cyan '%D{%f.%m}@%D{%L:%M}'
+}
+
 build_prompt() {
   RETVAL=$?
+  prompt_date
   prompt_status
   prompt_dir
   prompt_git
