@@ -1,3 +1,8 @@
+_☝️ This repo is no longer maintained as I have migrated to [starship](https://starship.rs/). You should, too._
+
+---
+
+
 # Sepshell
 Sepshell is clean and minimal theme with git bisecting, merging and rebasing modes as well as some pretty configurable ascii symbols to build your shell prompt.
 
